@@ -76,6 +76,11 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 - Obtain Model Weights From The Provided GDrive Link
 - Place Model Weights Under `models/` directory
 
+**Add Required Directories**
+```bash
+mkdir -p models inputs outputs
+```
+
 **Run Inference**
 ```bash
 python src/infer.py
