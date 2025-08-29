@@ -37,7 +37,7 @@ def main():
     results = model.predict(
         source=SOURCE,
         imgsz=640,
-        conf=0.25,
+        conf=CONF,
         iou=0.6,
         save=True,
         save_txt=True,
