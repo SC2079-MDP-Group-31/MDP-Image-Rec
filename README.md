@@ -121,3 +121,6 @@ python src/infer.py
 | 38 | **Right Arrow** |
 | 39 | **Left Arrow** |
 | 40 | **Stop** |
+
+Serve Model : uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+Test API at (http://localhost:8000/docs)

@@ -1,0 +1,10 @@
+model: "models/task1/task1.pt"
+source: "inputs"           # file or folder
+save_dir: "outputs"
+imgsz: 640
+conf: 0.75
+iou: 0.6
+device: 0               # "0" for GPU 0, or "cpu"
+save_txt: true             # YOLO txt outputs
+save_conf: true
+
