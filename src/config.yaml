@@ -1,4 +1,4 @@
-weights: "models/task1/task1.pt"
+weights: "models/task2/v12_task1.pt"
 source: "inputs"           # file or folder
 save_dir: "outputs"
 imgsz: 640

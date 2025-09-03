@@ -88,6 +88,41 @@ python src/infer.py
 
 ---
 
+
+### Serving Model On LocalHost
+
+**Start Up Uvicorn Server On Local Machine**
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+Test API at (http://localhost:8000/docs)
+
+---
+
+### Local To Public Server Hosting
+Ngrok exposes the local server to the public via a secure tunnel
+
+**Installing Ngrok**
+```bash
+pip install pyngrok
+```
+
+**Inputting Ngrok API Key**
+```bash
+ngrok config add-authtoken $YOUR_AUTHTOKEN
+```
+
+**Start Up Uvicorn Server On Local Machine**
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+**Start Up Ngrok Tunneling**
+```bash
+ngrok http 8000
+```
+
 ### Data Mapping
 | Yaml ID | Name |
 |---|---|
@@ -122,5 +157,4 @@ python src/infer.py
 | 39 | **Left Arrow** |
 | 40 | **Stop** |
 
-Serve Model : uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-Test API at (http://localhost:8000/docs)
+---

@@ -4,6 +4,8 @@ save_dir: "outputs"
 imgsz: 640
 conf: 0.75
 iou: 0.6
+jpeg_quality: 95 # Controls compression: 1-100 (higher is better quality but larger file)
+line_width: 2 # Controls width of bounding box lines
 device: 0               # "0" for GPU 0, or "cpu"
 save_txt: true             # YOLO txt outputs
 save_conf: true
