@@ -1,7 +1,32 @@
-.venv/
+
 models/*
 inputs/*
 outputs/*
 testinputs/*
-.env
+.venv/
+
+# --- Python bytecode / cache ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Build / packaging ---
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+wheels/
+
+# --- IDE / editor ---
 .vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Env & secrets (never commit secrets) ---
+.env
+.env.*
+*.pem
+*.key
+*.crt
