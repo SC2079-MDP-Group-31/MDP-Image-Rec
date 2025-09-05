@@ -4,3 +4,4 @@ inputs/*
 outputs/*
 testinputs/*
 .env
+.vscode/

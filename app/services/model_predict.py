@@ -1,5 +1,6 @@
 from PIL import Image
 import io, uuid, os
+import debugpy
 import cv2
 import numpy as np
 from dotenv import load_dotenv
@@ -32,7 +33,8 @@ def _bytes_to_rgb_numpy(image_bytes: bytes) -> np.ndarray:
     arr = np.asarray(img, dtype=np.uint8)
     return np.ascontiguousarray(arr)
 
-def model_predict_download( image_bytes: bytes):
+# Function to handle image prediction and return annotated image for download
+def model_predict_download(image_bytes: bytes, returnJSON: bool = False):
     # 1) Decode bytes to numpy
     img_rgb = _bytes_to_rgb_numpy(image_bytes)            # (H,W,3) RGB
 
@@ -43,7 +45,7 @@ def model_predict_download( image_bytes: bytes):
         iou=IOU,
         imgsz=IMG_SIZE,
         device=DEVICE,
-        verbose=False
+        verbose=False,
     )[0]
 
     # 3) Render annotated image (BGR numpy)
@@ -59,3 +61,32 @@ def model_predict_download( image_bytes: bytes):
     buffer.seek(0)
     filename = f"prediction_{uuid.uuid4().hex[:8]}.jpg"
     return buffer, filename
+
+# Function to handle image prediction and return results as JSON
+def model_predict(image_bytes: bytes):
+    # 1) Decode bytes to numpy
+    img_rgb = _bytes_to_rgb_numpy(image_bytes)            # (H,W,3) RGB
+
+    # 2) Inference (Ultralytics accepts numpy arrays directly)
+    res = model.predict(
+        source=img_rgb,
+        conf=CONF,
+        iou=IOU,
+        imgsz=IMG_SIZE,
+        device=DEVICE,
+        verbose=False,
+    )[0]
+
+    # 3) Parse results
+    predictions = []
+    for box in res.boxes:
+        cls_id = int(box.cls[0])
+        cls_name = model.names[cls_id] if model.names and cls_id in model.names else str(cls_id)
+        conf = float(box.conf[0])
+        predictions.append({
+            "class_id": cls_id,
+            "class_name": cls_name,
+            "confidence": conf,
+        })
+
+    return {"predictions": predictions}

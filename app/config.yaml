@@ -9,4 +9,36 @@ line_width: 2 # Controls width of bounding box lines
 device: 0               # "0" for GPU 0, or "cpu"
 save_txt: true             # YOLO txt outputs
 save_conf: true
+#Holds class names
+classes:
+  - Number 1
+  - Number 2
+  - Number 3
+  - Number 4
+  - Number 5
+  - Number 6
+  - Number 7
+  - Number 8
+  - Number 9
+  - Alphabet A
+  - Alphabet B
+  - Alphabet C
+  - Alphabet D
+  - Alphabet E
+  - Alphabet F
+  - Alphabet G
+  - Alphabet H
+  - Alphabet S
+  - Alphabet T
+  - Alphabet U
+  - Alphabet V
+  - Alphabet W
+  - Alphabet X
+  - Alphabet Y
+  - Alphabet Z
+  - Up Arrow
+  - Down Arrow
+  - Right Arrow
+  - Left Arrow
+  - Stop sign
 

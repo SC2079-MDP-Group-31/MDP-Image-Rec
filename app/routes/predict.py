@@ -1,6 +1,7 @@
+import debugpy
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import StreamingResponse
-from app.services.model_predict import model_predict_download
+from services.model_predict import model_predict_download, model_predict
 router = APIRouter()
 
 @router.get("/test")
@@ -13,8 +14,7 @@ async def test():
         return {"error": str(e)}
 
 # This endpoint handles image uploads and returns predictions as JSON
-'''
-@router.post("/predict")
+@router.post("/predict-json")
 async def predict(file: UploadFile = File(...)):
     try:
         contents = await file.read()
@@ -24,7 +24,6 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         print("❌ Internal server error:", e)
         return {"error": str(e)}
-'''
 
 # This endpoint handles image uploads and returns the image with predictions for download
 @router.post("/predict-download")
