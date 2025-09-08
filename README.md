@@ -98,6 +98,8 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 Test API at (http://localhost:8000/docs)
 
+- `0.0.0.0:8000` : Means that the server can be accessed by any machine that can reach your machine over the network *(same Wi-Fi, LAN)*
+- Access Via `http://<server_machine_local_ip>:8000`
 ---
 
 ### Local To Public Server Hosting

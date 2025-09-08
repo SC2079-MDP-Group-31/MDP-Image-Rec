@@ -1,6 +1,6 @@
 weights: "models/task2/v12_task1.pt"
 source: "inputs"           # file or folder
-save_dir: "outputs"
+save_dir: "test_outputs"
 imgsz: 640
 conf: 0.75
 iou: 0.6

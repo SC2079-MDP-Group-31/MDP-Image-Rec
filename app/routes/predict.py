@@ -1,9 +1,22 @@
 import debugpy
+import os
+import yaml
+from pathlib import Path
+from PIL import Image
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import StreamingResponse
-from services.model_predict import model_predict_download, model_predict
+from services.model_predict import *
 router = APIRouter()
 
+# ------------------------ LOAD CONFIGS --------------------------------
+# load variables from config file into the environment
+with open("app/config.yaml", "r") as f:   # adjust path if config.yaml is elsewhere
+    cfg = yaml.safe_load(f)
+
+PREDICTIONS_DIR = cfg.get("predictions_dir", "outputs/predictions")
+
+# ----------------------- TEST APIS --------------------------------------------------
+# Simple test endpoint to verify server connectivity
 @router.get("/test")
 async def test():
     try:
@@ -26,10 +39,10 @@ async def predict(file: UploadFile = File(...)):
         return {"error": str(e)}
 
 # This endpoint handles image uploads and returns the image with predictions for download
-@router.post("/predict-download")
+@router.post("/predict-download-test")
 async def predict_download_image(file: UploadFile = File(...)):
     contents = await file.read()
-    buffer, filename = model_predict_download(contents)
+    buffer, filename, predictions = model_predict_download(contents)
 
     return StreamingResponse(
         buffer,
@@ -38,3 +51,24 @@ async def predict_download_image(file: UploadFile = File(...)):
             "Content-Disposition": f'attachment; filename="{filename}"'
         }
     )
+
+# ------------------- PRODUCTION APIS --------------------------------------------------
+# This endpoint handles image uploads and saves the predicted image on the server locally while returning the predicted data as JSON
+@router.post("/predict-save")
+async def predict_save_image(file: UploadFile = File(...)):
+    contents = await file.read()
+    buffer, filename, predictions = model_predict_download(contents)
+
+    # ---- Save file to server directory ----
+    save_path = os.path.join(PREDICTIONS_DIR, filename)
+    with open(save_path, "wb") as f:
+        f.write(buffer.getbuffer())  # buffer is BytesIO, so use getbuffer()
+    
+    return predictions
+
+# This endpoint handles image stitching (if needed) and displays the stitched image
+@router.get("/stitch")
+async def stitch_images():
+    stitched_img = stitch_img()
+    stitched_img.show()  # This will open the stitched image using the default image viewer
+    return {"message": "Stitched image displayed."}
