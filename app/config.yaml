@@ -1,4 +1,5 @@
 model: "models/task1/task1.pt"
+# model: "models/task2/v12_task1.pt"
 source: "inputs"           # file or folder
 save_dir: "app/outputs"
 predictions_dir: "app/outputs/predictions"

@@ -65,16 +65,29 @@ def model_predict_download(image_bytes: bytes, returnJSON: bool = False):
     filename = f"prediction_{uuid.uuid4().hex[:8]}.jpg"
 
     # 3) Parse results
-    predictions = []
-    for box in res.boxes:
-        cls_id = int(box.cls[0])
-        cls_name = model.names[cls_id] if model.names and cls_id in model.names else str(cls_id)
-        conf = float(box.conf[0])
-        predictions.append({
-            "class_id": cls_id,
-            "class_name": cls_name,
-            "confidence": conf,
-        })
+    # First path is for default/best model, else statement for backup model
+    if MODEL_PATH == "models/task1/task1.pt":
+        predictions = []
+        for box in res.boxes:
+            cls_id = int(box.cls[0])
+            cls_name = model.names[cls_id] if model.names and cls_id in model.names else str(cls_id)
+            conf = float(box.conf[0])
+            predictions.append({
+                "class_id": cls_id,
+                "class_name": cls_name,
+                "confidence": conf,
+            })
+    else:
+        predictions = []
+        for box in res.boxes:
+            cls_id = int(box.cls[0]) + 10
+            cls_name = model.names[cls_id] if model.names and cls_id in model.names else str(cls_id)
+            conf = float(box.conf[0])
+            predictions.append({
+                "class_id": cls_id,
+                "class_name": cls_id,
+                "confidence": conf,
+            })
 
     predictions = {"predictions": predictions}
 
