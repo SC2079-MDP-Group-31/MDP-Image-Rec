@@ -6,6 +6,7 @@ from PIL import Image
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import StreamingResponse
 from services.model_predict import *
+from services.pathing_algo import *
 router = APIRouter()
 
 # ------------------------ LOAD CONFIGS --------------------------------
@@ -54,7 +55,7 @@ async def predict_download_image(file: UploadFile = File(...)):
 
 # ------------------- PRODUCTION APIS --------------------------------------------------
 # This endpoint handles image uploads and saves the predicted image on the server locally while returning the predicted data as JSON
-@router.post("/predict-save")
+@router.post("/image")
 async def predict_save_image(file: UploadFile = File(...)):
     contents = await file.read()
     buffer, filename, predictions = model_predict_download(contents)
@@ -72,3 +73,9 @@ async def stitch_images():
     stitched_img = stitch_img()
     stitched_img.show()  # This will open the stitched image using the default image viewer
     return {"message": "Stitched image displayed."}
+
+# This endpoint obtains the obstacle data and returns the robot pathing
+@router.post("/path")
+async def get_prediction_path(raw_data: str):
+    commands = run_minimal(raw_data)
+    return {"predictions_path": commands}
