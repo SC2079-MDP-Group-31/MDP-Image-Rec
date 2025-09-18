@@ -88,18 +88,123 @@ python src/infer.py
 
 ---
 
+### API Endpoints
+
+**Accessing End Points**
+`http://{PC_IP_ADDRESS}:5000/{ENDPT}`
+
+**Pathing Algorithm Endpoint**
+`http://{PC_IP_ADDRESS}:5000/path`
+
+- Use Case: Call to obtain the machine pathing instructions
+
+- Request Parameters : (String)
+
+- Response : `{predictions_path : COMMANDS }`
+
+Example:
+
+*INPUT*:
+`"ALG:11,0,E,0;19,4,W,1;19,10,W,2;7,7,W,3;7,17,S,4;0,14,S,5;14,18,W,6;11,9,E,7;"`
+
+*OUTPUT:*
+```py
+{
+  "predictions_path": [
+    "SF040",
+    "RF090",
+    "SB010",
+    "SCAN_3",
+    "SF010",
+    "RB090",
+    "SF050",
+    "SCAN_5",
+    "SB020",
+    "RF090",
+    "SF010",
+    "LF090",
+    "SCAN_4",
+    "SF010",
+    "RF090",
+    "RF090",
+    "SB020",
+    "RB090",
+    "SCAN_6",
+    "RF090",
+    "SF030",
+    "LF090",
+    "SCAN_2",
+    "SB010",
+    "RF090",
+    "SF060",
+    "RB090",
+    "SF010",
+    "SCAN_1",
+    "SB030",
+    "LF090",
+    "SB030",
+    "RB090",
+    "SF010",
+    "SCAN_0",
+    "SB010",
+    "RF090",
+    "SF080",
+    "RB090",
+    "SF010",
+    "SCAN_7"
+  ]
+}
+```
+
+**Image Recognition Endpoint**
+`http://{PC_IP_ADDRESS}:5000/image`
+
+- Use Case: Call to obtain class prediction for a captured image
+
+- Request Parameters : (Img File)
+
+- Response : `{predictions : PREDICTIONS }`
+
+Example:
+
+*INPUT*:
+<img src="assets/10_jpg.rf.a69c59fd2fe4d8d72a021ebba2a9acd4.jpg" alt="Input Image" width="400"/>
+
+*OUTPUT:*
+```py
+{
+  "predictions": [
+    {
+      "class_id": 10,
+      "class_name": "21", # This Maps To The Detected Value
+      "confidence": 0.894066572189331
+    }
+  ]
+}
+```
+
+**Image Stitching Endpoint**
+`http://{PC_IP_ADDRESS}:5000/stitch`
+
+- Use Case: Call to display stitched image on PC consisting of currently detected images
+
+- Request Parameters : N/A
+
+- Response : `{"message": "Stitched image displayed."}`
+
+---
 
 ### Serving Model On LocalHost
 
 **Start Up Uvicorn Server On Local Machine**
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 5000
 ```
 
-Test API at (http://localhost:8000/docs)
+Test API at (http://localhost:5000/docs)
 
-- `0.0.0.0:8000` : Means that the server can be accessed by any machine that can reach your machine over the network *(same Wi-Fi, LAN)*
-- Access Via `http://<server_machine_local_ip>:8000`
+- `0.0.0.0:5000` : Means that the server can be accessed by any machine that can reach your machine over the network *(same Wi-Fi, LAN)*
+- Access Via `http://<server_machine_local_ip>:5000`
 ---
 
 ### Local To Public Server Hosting
@@ -117,12 +222,12 @@ ngrok config add-authtoken $YOUR_AUTHTOKEN
 
 **Start Up Uvicorn Server On Local Machine**
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 5000
 ```
 
 **Start Up Ngrok Tunneling**
 ```bash
-ngrok http 8000
+ngrok http 5000
 ```
 
 ### Data Mapping
