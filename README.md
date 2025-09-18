@@ -168,6 +168,7 @@ Example:
 Example:
 
 *INPUT*:
+
 <img src="assets/10_jpg.rf.a69c59fd2fe4d8d72a021ebba2a9acd4.jpg" alt="Input Image" width="400"/>
 
 *OUTPUT:*
