@@ -177,7 +177,7 @@ Example:
   "predictions": [
     {
       "class_id": 10,
-      "class_name": "21", # This Maps To The Detected Value
+      "image_id": "21", # This Maps To The Detected Value
       "confidence": 0.894066572189331
     }
   ]
