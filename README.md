@@ -40,7 +40,7 @@ Applied to prevent overfitting of data, prepare model for real world variations 
 ---
 
 ### Required Libraries & Interpreters
-- `python v3.11.0` : Python interpreter version for compatibility with installed libraries
+- `python v3.10.5` : Python interpreter version for compatibility with installed libraries
 - `ultralytics` : Python library to use YOLO object detection models
 - `torch` : Deep learning framework that handles tensor operations, GPU accelerations & model layers/parameters
 - `torchvision` : Pytorch companion library focused on computer vision tasks
@@ -72,14 +72,14 @@ pip install -r requirements.txt
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 ```
 
-**Install Model Weights & Yaml File**
-- Obtain Model Weights From The Provided GDrive Link : https://drive.google.com/drive/folders/1gYvWR5__JVK6osUoonCY5rmd46knZXbt?usp=drive_link
-- Place Model Weight Folders Under `models/` directory
-
 **Add Required Directories**
 ```bash
 mkdir -p models inputs outputs
 ```
+
+**Install Model Weights & Yaml File**
+- Obtain Model Weights From The Provided GDrive Link : https://drive.google.com/drive/folders/1gYvWR5__JVK6osUoonCY5rmd46knZXbt?usp=drive_link
+- Place Model Weight Folders Under `models/` directory
 
 **Run Image Recognition & Pathing Server**
 ```bash
@@ -236,7 +236,7 @@ ngrok http 5000
 ```
 
 ### Data Mapping
-| Yaml ID | Name |
+| Image ID | Representation |
 |---|---|
 | 11 | **1** |
 | 12 | **2** |
