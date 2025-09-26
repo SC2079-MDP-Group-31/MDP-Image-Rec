@@ -1,5 +1,8 @@
 
-models/*
+models/initial/*
+models/task1/*
+models/task2/*
+models/best3.pt
 inputs/*
 outputs/*
 testinputs/*

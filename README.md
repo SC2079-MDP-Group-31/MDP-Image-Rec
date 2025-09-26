@@ -73,8 +73,8 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 ```
 
 **Install Model Weights & Yaml File**
-- Obtain Model Weights From The Provided GDrive Link
-- Place Model Weights Under `models/` directory
+- Obtain Model Weights From The Provided GDrive Link : https://drive.google.com/drive/folders/1gYvWR5__JVK6osUoonCY5rmd46knZXbt?usp=drive_link
+- Place Model Weight Folders Under `models/` directory
 
 **Add Required Directories**
 ```bash

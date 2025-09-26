@@ -57,6 +57,7 @@ async def predict_download_image(file: UploadFile = File(...)):
 # This endpoint handles image uploads and saves the predicted image on the server locally while returning the predicted data as JSON
 @router.post("/image")
 async def predict_save_image(file: UploadFile = File(...)):
+    print("Request Received To Predict Image.")
     contents = await file.read()
     buffer, filename, predictions = model_predict_download(contents)
 
@@ -65,6 +66,7 @@ async def predict_save_image(file: UploadFile = File(...)):
     with open(save_path, "wb") as f:
         f.write(buffer.getbuffer())  # buffer is BytesIO, so use getbuffer()
     
+
     return predictions
 
 # This endpoint handles image stitching (if needed) and displays the stitched image

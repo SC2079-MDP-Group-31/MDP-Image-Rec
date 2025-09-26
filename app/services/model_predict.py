@@ -33,7 +33,8 @@ def _bytes_to_rgb_numpy(image_bytes: bytes) -> np.ndarray:
     """Decode bytes -> contiguous uint8 RGB HxWx3, with EXIF orientation fixed."""
     img = Image.open(io.BytesIO(image_bytes))
     img = ImageOps.exif_transpose(img).convert("RGB")  # handle orientation + force RGB
-    arr = np.asarray(img, dtype=np.uint8)
+    flipped_img = img.rotate(180) # Flip image 180 degrees for camera orientation
+    arr = np.asarray(flipped_img, dtype=np.uint8)
     return np.ascontiguousarray(arr)
 
 # Function to handle image prediction and return annotated image for download
