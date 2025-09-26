@@ -93,7 +93,7 @@ python app/main.py
 **Accessing End Points**
 `http://{PC_IP_ADDRESS}:5000/{ENDPT}`
 
-**Pathing Algorithm Endpoint**
+#### Pathing Algorithm Endpoint
 `http://{PC_IP_ADDRESS}:5000/path`
 
 - Use Case: Call to obtain the machine pathing instructions
@@ -156,7 +156,7 @@ Example:
 }
 ```
 
-**Image Recognition Endpoint**
+#### Image Recognition Endpoint
 `http://{PC_IP_ADDRESS}:5000/image`
 
 - Use Case: Call to obtain class prediction for a captured image
@@ -182,12 +182,11 @@ Example:
     }
   ]
 }
+```
 
 - Prediction images saved under *app/outputs/predictions*
 
-```
-
-**Image Stitching Endpoint**
+#### Image Stitching Endpoint
 `http://{PC_IP_ADDRESS}:5000/stitch`
 
 - Use Case: Call to display stitched image on PC consisting of currently detected images
