@@ -81,9 +81,9 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 mkdir -p models inputs outputs
 ```
 
-**Run Inference**
+**Run Image Recognition & Pathing Server**
 ```bash
-python src/infer.py
+python app/main.py
 ```
 
 ---
@@ -182,6 +182,9 @@ Example:
     }
   ]
 }
+
+- Prediction images saved under *app/outputs/predictions*
+
 ```
 
 **Image Stitching Endpoint**
@@ -192,6 +195,8 @@ Example:
 - Request Parameters : N/A
 
 - Response : `{"message": "Stitched image displayed."}`
+
+- Stitched images saved under *app/outputs/stitched_preds*
 
 ---
 

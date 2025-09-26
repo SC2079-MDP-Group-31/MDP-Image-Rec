@@ -378,11 +378,6 @@ class RaspberryPi:
         url = f"http://{API_IP}:{API_PORT}/image"
         filename = f"{int(time.time())}_{obstacle_id}_{signal}.jpg"
 
-        con_file = "PiLCConfig9.txt"
-        Home_Files = []
-        Home_Files.append(os.getlogin())
-        config_file = "/home/" + Home_Files[0] + "/" + con_file
-
         self.logger.debug("Requesting from image API")
 
         response = self.capture_and_send(url)

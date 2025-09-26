@@ -7,7 +7,7 @@ inputs/*
 outputs/*
 testinputs/*
 .venv/
-app/outputs/
+app/outputs/*
 
 # --- Python bytecode / cache ---
 *__pycache__/

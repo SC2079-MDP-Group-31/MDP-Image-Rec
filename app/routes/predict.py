@@ -66,7 +66,7 @@ async def predict_save_image(file: UploadFile = File(...)):
     with open(save_path, "wb") as f:
         f.write(buffer.getbuffer())  # buffer is BytesIO, so use getbuffer()
     
-
+    
     return predictions
 
 # This endpoint handles image stitching (if needed) and displays the stitched image
