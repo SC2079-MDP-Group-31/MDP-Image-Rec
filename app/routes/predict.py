@@ -17,16 +17,6 @@ with open("app/config.yaml", "r") as f:   # adjust path if config.yaml is elsewh
 PREDICTIONS_DIR = cfg.get("predictions_dir", "outputs/predictions")
 
 # ----------------------- TEST APIS --------------------------------------------------
-# Simple test endpoint to verify server connectivity
-@router.get("/test")
-async def test():
-    try:
-        response = "Server Connected!"
-        return response
-    except Exception as e:
-        print("❌ Internal server error:", e)
-        return {"error": str(e)}
-
 # This endpoint handles image uploads and returns predictions as JSON
 @router.post("/predict-json")
 async def predict(file: UploadFile = File(...)):
@@ -54,6 +44,16 @@ async def predict_download_image(file: UploadFile = File(...)):
     )
 
 # ------------------- PRODUCTION APIS --------------------------------------------------
+# Simple test endpoint to verify server connectivity
+@router.get("/status")
+async def test():
+    try:
+        response = "Server Connected!"
+        return response
+    except Exception as e:
+        print("❌ Internal server error:", e)
+        return {"error": str(e)}
+
 # This endpoint handles image uploads and saves the predicted image on the server locally while returning the predicted data as JSON
 @router.post("/image")
 async def predict_save_image(file: UploadFile = File(...)):
@@ -77,7 +77,53 @@ async def stitch_images():
     return {"message": "Stitched image displayed."}
 
 # This endpoint obtains the obstacle data and returns the robot pathing
+# @router.post("/path")
+# async def get_prediction_path(raw_data: str):
+#     commands = run_minimal(raw_data)
+#     return {"predictions_path": commands}
+
+# This endpoint obtains the obstacle data and returns the robot pathing with coordinates
 @router.post("/path")
-async def get_prediction_path(raw_data: str):
-    commands = run_minimal(raw_data)
-    return {"predictions_path": commands}
+async def get_prediction_path_with_coordinates(raw_data: str):
+    from services.pathing_algo import run_minimal_with_coordinates
+    commands_with_coords = run_minimal_with_coordinates(raw_data)
+    
+    # Format the response to include both commands and coordinates
+    formatted_response = []
+    for cmd_str, position in commands_with_coords:
+        if position is not None:
+            formatted_response.append({
+                "commands": cmd_str,
+                "estimated_position": {
+                    "x": position.x//10,
+                    "y": position.y//10,
+                    "d": {
+                        "TOP": "N",
+                        "RIGHT": "E",
+                        "DOWN": "S",
+                        "LEFT": "W"
+                    }.get(position.direction.name if hasattr(position.direction, 'name') else str(position.direction), position.direction)
+                }
+            })
+        else:
+            # Handle case where position tracking is not available
+            formatted_response.append({
+                "command": cmd_str,
+                "estimated_position": None
+            })
+    
+    commands = []
+    path = [{
+      "x": 1,
+      "y": 1,
+      "d": "N"
+    },]
+    for item in formatted_response:
+        commands.append(item['commands'])
+        path.append(item['estimated_position'])
+
+    return {
+        "commands": commands,
+        "path": path,
+        "total_commands": len(formatted_response)
+    }

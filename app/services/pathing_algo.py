@@ -29,6 +29,29 @@ def run_minimal(raw_data):
         commands = process_string_command(decoded_data)
         return commands
 
+def run_minimal_with_coordinates(raw_data):
+    """Run pathfinding with coordinate tracking after each movement."""
+    also_run_simulator = False  # Set to False if you don't want to run the simulator
+    if isinstance(raw_data, bytes):
+        decoded_data = raw_data.decode("utf-8")
+    else:
+        decoded_data = raw_data
+        
+    print(f"Received: {decoded_data}")
+
+    if decoded_data.startswith("ALG:"):
+        obstacle_data = parse_rpi_message(decoded_data)
+        print(f"Parsed obstacle data: {obstacle_data}")
+        commands_with_coords = process_obstacle_data_with_coordinates(obstacle_data, also_run_simulator)
+        return commands_with_coords
+    else:
+        # For string commands, we don't have coordinate tracking yet, so return simple format
+        commands = process_string_command(decoded_data)
+        # Convert to coordinate format with None positions for compatibility
+        if commands:
+            return [(cmd, None) for cmd in commands]
+        return []
+
 
 # ------------------ Helper Functions -----------------------------------
 def parse_rpi_message(message: str) -> List[List[int]]:
@@ -82,6 +105,49 @@ def process_obstacle_data(data: List[List[int]], also_run_simulator: bool):
         return commands
     else:
         print("ERROR!! NO COMMANDS TO SEND TO RPI")
+
+def process_obstacle_data_with_coordinates(data: List[List[int]], also_run_simulator: bool):
+    """Process obstacle data and return commands with estimated coordinates after each movement."""
+    obstacles = parse_obstacle_data(data)
+    app = AlgoMinimal(obstacles)
+
+    app.execute()
+
+    # Get path planning results with coordinates
+    commands_with_coords = get_commands_with_coordinates_from_robot(app.robot)
+    
+    print(f"Commands with coordinates: {len(commands_with_coords)} movements")
+    for i, (cmd_str, position) in enumerate(commands_with_coords):
+        print(f"  {i+1}. {cmd_str} -> Position: ({position.x}, {position.y}, {position.direction})")
+
+    if commands_with_coords:
+        return commands_with_coords
+    else:
+        print("ERROR!! NO COMMANDS TO SEND TO RPI")
+        return []
+
+def get_commands_with_coordinates_from_robot(robot):
+    """
+    Extract commands with estimated coordinates from the robot's hamiltonian path.
+    
+    Returns:
+        List of tuples: [(command_string, estimated_position_after_command), ...]
+    """
+    commands_with_coords = []
+    current_pos = robot.pos.copy()  # Start from robot's current position
+    
+    # Iterate through the robot's commands and track position changes
+    for command in robot.hamiltonian.commands:
+        # Apply the command to get new position
+        command.apply_on_pos(current_pos)
+        
+        # Convert command to string format
+        command_str = command.convert_to_message()
+        
+        # Store command string with the position after execution
+        commands_with_coords.append((command_str, current_pos.copy()))
+    
+    return commands_with_coords
 
 def parse_obstacle_data(data: List[List]) -> List[Obstacle]:
     """

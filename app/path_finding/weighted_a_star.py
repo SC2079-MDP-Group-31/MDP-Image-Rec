@@ -173,3 +173,31 @@ class WeightedAStar(ModifiedAStar):
             Tuple of (final_position, command_list) or (None, []) if no path found
         """
         return self.start_weighted_astar(flag)
+    
+    def get_path_with_coordinates(self, flag) -> Tuple[Optional[RobotPosition], List[Tuple[Command, RobotPosition]]]:
+        """
+        Execute pathfinding and return commands with estimated coordinates after each movement.
+
+        Args:
+            flag: Processing flag for command extraction
+
+        Returns:
+            Tuple of (final_position, list_of_(command, estimated_position_after_command))
+            or (None, []) if no path found
+        """
+        final_position, commands = self.start_weighted_astar(flag)
+        
+        if final_position is None or not commands:
+            return None, []
+        
+        # Track coordinates after each command
+        commands_with_coords = []
+        current_pos = self.start.copy()
+        
+        for command in commands:
+            # Apply command to get new position
+            command.apply_on_pos(current_pos)
+            # Store command with the position after execution
+            commands_with_coords.append((command, current_pos.copy()))
+        
+        return final_position, commands_with_coords
