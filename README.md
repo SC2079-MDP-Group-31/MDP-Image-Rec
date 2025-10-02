@@ -96,11 +96,11 @@ python app/main.py
 #### Pathing Algorithm Endpoint
 `http://{PC_IP_ADDRESS}:5000/path`
 
-- Use Case: Call to obtain the machine pathing instructions
+- Use Case: Call to obtain the machine pathing instructions and coordinates after each command
 
 - Request Parameters : (String)
 
-- Response : `{predictions_path : COMMANDS }`
+- Response : `{commands : COMMANDS, path: PATH }`
 
 Example:
 
@@ -110,7 +110,7 @@ Example:
 *OUTPUT:*
 ```py
 {
-  "predictions_path": [
+  "commands": [
     "SF040",
     "RF090",
     "SB010",
@@ -152,7 +152,220 @@ Example:
     "RB090",
     "SF010",
     "SCAN_7"
-  ]
+  ],
+  "path": [
+    {
+      "x": 1,
+      "y": 1,
+      "d": "N"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "d": "N"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "d": "E"
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "d": "E"
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "d": "E"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "d": "E"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "d": "N"
+    },
+    {
+      "x": 1,
+      "y": 10,
+      "d": "N"
+    },
+    {
+      "x": 1,
+      "y": 10,
+      "d": "N"
+    },
+    {
+      "x": 1,
+      "y": 8,
+      "d": "N"
+    },
+    {
+      "x": 4,
+      "y": 10,
+      "d": "E"
+    },
+    {
+      "x": 5,
+      "y": 10,
+      "d": "E"
+    },
+    {
+      "x": 7,
+      "y": 13,
+      "d": "N"
+    },
+    {
+      "x": 7,
+      "y": 13,
+      "d": "N"
+    },
+    {
+      "x": 7,
+      "y": 14,
+      "d": "N"
+    },
+    {
+      "x": 10,
+      "y": 16,
+      "d": "E"
+    },
+    {
+      "x": 12,
+      "y": 13,
+      "d": -90
+    },
+    {
+      "x": 12,
+      "y": 15,
+      "d": -90
+    },
+    {
+      "x": 10,
+      "y": 18,
+      "d": "E"
+    },
+    {
+      "x": 10,
+      "y": 18,
+      "d": "E"
+    },
+    {
+      "x": 12,
+      "y": 15,
+      "d": -90
+    },
+    {
+      "x": 12,
+      "y": 12,
+      "d": -90
+    },
+    {
+      "x": 15,
+      "y": 10,
+      "d": "E"
+    },
+    {
+      "x": 15,
+      "y": 10,
+      "d": "E"
+    },
+    {
+      "x": 14,
+      "y": 10,
+      "d": "E"
+    },
+    {
+      "x": 16,
+      "y": 7,
+      "d": -90
+    },
+    {
+      "x": 16,
+      "y": 1,
+      "d": -90
+    },
+    {
+      "x": 14,
+      "y": 4,
+      "d": "E"
+    },
+    {
+      "x": 15,
+      "y": 4,
+      "d": "E"
+    },
+    {
+      "x": 15,
+      "y": 4,
+      "d": "E"
+    },
+    {
+      "x": 12,
+      "y": 4,
+      "d": "E"
+    },
+    {
+      "x": 14,
+      "y": 7,
+      "d": "N"
+    },
+    {
+      "x": 14,
+      "y": 4,
+      "d": "N"
+    },
+    {
+      "x": 16,
+      "y": 1,
+      "d": "W"
+    },
+    {
+      "x": 15,
+      "y": 1,
+      "d": "W"
+    },
+    {
+      "x": 15,
+      "y": 1,
+      "d": "W"
+    },
+    {
+      "x": 16,
+      "y": 1,
+      "d": "W"
+    },
+    {
+      "x": 14,
+      "y": 4,
+      "d": "N"
+    },
+    {
+      "x": 14,
+      "y": 12,
+      "d": "N"
+    },
+    {
+      "x": 16,
+      "y": 9,
+      "d": "W"
+    },
+    {
+      "x": 15,
+      "y": 9,
+      "d": "W"
+    },
+    {
+      "x": 15,
+      "y": 9,
+      "d": "W"
+    }
+  ],
+  "total_commands": 41
 }
 ```
 
