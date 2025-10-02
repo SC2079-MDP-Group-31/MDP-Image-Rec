@@ -3,7 +3,7 @@ import os
 import yaml
 from pathlib import Path
 from PIL import Image
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Request, HTTPException
 from fastapi.responses import StreamingResponse
 from services.model_predict import *
 from services.pathing_algo import *
@@ -84,7 +84,15 @@ async def stitch_images():
 
 # This endpoint obtains the obstacle data and returns the robot pathing with coordinates
 @router.post("/path")
-async def get_prediction_path_with_coordinates(raw_data: str):
+async def get_prediction_path_with_coordinates(request: Request):
+    # Require text/plain
+    ct = (request.headers.get("content-type") or "").lower()
+    if "text/plain" not in ct:
+        raise HTTPException(415, detail="Send raw text with Content-Type: text/plain")
+    
+    raw_data = (await request.body()).decode("utf-8").strip()
+
+    print(f"Raw data received at /path endpoint: {raw_data}")
     from services.pathing_algo import run_minimal_with_coordinates
     commands_with_coords = run_minimal_with_coordinates(raw_data)
     
@@ -100,7 +108,7 @@ async def get_prediction_path_with_coordinates(raw_data: str):
                     "d": {
                         "TOP": "N",
                         "RIGHT": "E",
-                        "DOWN": "S",
+                        "BOTTOM": "S",
                         "LEFT": "W"
                     }.get(position.direction.name if hasattr(position.direction, 'name') else str(position.direction), position.direction)
                 }
@@ -119,8 +127,10 @@ async def get_prediction_path_with_coordinates(raw_data: str):
       "d": "N"
     },]
     for item in formatted_response:
-        commands.append(item['commands'])
+        commands.append(item['commands'])   
         path.append(item['estimated_position'])
+
+    print(f"Formatted response: {formatted_response}")
 
     return {
         "commands": commands,
