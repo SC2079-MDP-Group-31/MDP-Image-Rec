@@ -68,7 +68,7 @@ class StraightCommand(Command):
         - Backward: SBXXX (where XXX is absolute distance in cm, zero-padded if < 100)
         """
         distance_cm = int(abs(self.dist))
-        direction_prefix = "SB" if self.dist < 0 else "SF"
+        direction_prefix = "BW" if self.dist < 0 else "FW"
 
         # Zero-pad distances less than 100
         if distance_cm < 100:

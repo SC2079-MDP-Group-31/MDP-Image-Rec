@@ -40,4 +40,4 @@ class ScanCommand(Command):
         Returns:
             str: Message in the format "SCAN_{obj_index}"
         """
-        return f"SCAN_{self.obj_index}"
+        return f"SCAN0{self.obj_index}"

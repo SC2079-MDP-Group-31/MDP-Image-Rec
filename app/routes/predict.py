@@ -17,6 +17,53 @@ with open("app/config.yaml", "r") as f:   # adjust path if config.yaml is elsewh
 PREDICTIONS_DIR = cfg.get("predictions_dir", "outputs/predictions")
 
 # ----------------------- TEST APIS --------------------------------------------------
+@router.post("/path-test")
+async def get_prediction_path_with_coordinates_test(raw_data: str):
+    from services.pathing_algo import run_minimal_with_coordinates
+    commands_with_coords = run_minimal_with_coordinates(raw_data)
+    
+    # Format the response to include both commands and coordinates
+    formatted_response = []
+    for cmd_str, position in commands_with_coords:
+        if position is not None:
+            formatted_response.append({
+                "commands": cmd_str,
+                "estimated_position": {
+                    "x": position.x//10,
+                    "y": position.y//10,
+                    "d": {
+                        "TOP": 0,
+                        "RIGHT": 1,
+                        "BOTTOM": 2,
+                        "LEFT": 3
+                    }.get(position.direction.name if hasattr(position.direction, 'name') else str(position.direction), position.direction)
+                }
+            })
+        else:
+            # Handle case where position tracking is not available
+            formatted_response.append({
+                "command": cmd_str,
+                "estimated_position": None
+            })
+    
+    commands = []
+    path = [{
+      "x": 1,
+      "y": 1,
+      "d": 0
+    },]
+    for item in formatted_response:
+        commands.append(item['commands'])   
+        path.append(item['estimated_position'])
+
+    print(f"Formatted response: {formatted_response}")
+
+    return {
+        "commands": commands,
+        "path": path,
+        "total_commands": len(formatted_response)
+    }
+
 # This endpoint handles image uploads and returns predictions as JSON
 @router.post("/predict-json")
 async def predict(file: UploadFile = File(...)):
@@ -60,12 +107,12 @@ async def predict_save_image(file: UploadFile = File(...)):
     print("Request Received To Predict Image.")
     contents = await file.read()
     buffer, filename, predictions = model_predict_download(contents)
-
+    print("Image prediction completed")
     # ---- Save file to server directory ----
     save_path = os.path.join(PREDICTIONS_DIR, filename)
     with open(save_path, "wb") as f:
         f.write(buffer.getbuffer())  # buffer is BytesIO, so use getbuffer()
-    
+    print("Predicted image saved to server as ", filename)
     
     return predictions
 
@@ -106,10 +153,10 @@ async def get_prediction_path_with_coordinates(request: Request):
                     "x": position.x//10,
                     "y": position.y//10,
                     "d": {
-                        "TOP": "N",
-                        "RIGHT": "E",
-                        "BOTTOM": "S",
-                        "LEFT": "W"
+                        "TOP": 0,
+                        "RIGHT": 1,
+                        "BOTTOM": 2,
+                        "LEFT": 3
                     }.get(position.direction.name if hasattr(position.direction, 'name') else str(position.direction), position.direction)
                 }
             })
@@ -124,7 +171,7 @@ async def get_prediction_path_with_coordinates(request: Request):
     path = [{
       "x": 1,
       "y": 1,
-      "d": "N"
+      "d": 0
     },]
     for item in formatted_response:
         commands.append(item['commands'])   

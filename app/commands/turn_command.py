@@ -74,14 +74,14 @@ class TurnCommand(Command):
     COMMAND_MESSAGES = {
         # (left, right, reverse, turn_type): message
         (True, False, False, TypeOfTurn.SMALL): "KF001",  # turn left small forward
-        (True, False, False, TypeOfTurn.MEDIUM): "LF090",  # turn left medium forward
-        (True, False, False, TypeOfTurn.LARGE): "LF180",  # turn left large forward
+        (True, False, False, TypeOfTurn.MEDIUM): "FL090",  # turn left medium forward
+        (True, False, False, TypeOfTurn.LARGE): "FL180",  # turn left large forward
         (True, False, True, TypeOfTurn.SMALL): "KB001",  # turn left small reverse
         (True, False, True, TypeOfTurn.MEDIUM): "LB090",  # turn left medium reverse
         (True, False, True, TypeOfTurn.LARGE): "LB180",  # turn left large reverse
         (False, True, False, TypeOfTurn.SMALL): "JF001",  # turn right small forward
-        (False, True, False, TypeOfTurn.MEDIUM): "RF090",  # turn right medium forward
-        (False, True, False, TypeOfTurn.LARGE): "RF180",  # turn right large forward
+        (False, True, False, TypeOfTurn.MEDIUM): "FR090",  # turn right medium forward
+        (False, True, False, TypeOfTurn.LARGE): "FR180",  # turn right large forward
         (False, True, True, TypeOfTurn.SMALL): "JB001",  # turn right small reverse
         (False, True, True, TypeOfTurn.MEDIUM): "RB090",  # turn right medium reverse
         (False, True, True, TypeOfTurn.LARGE): "RB180",  # turn right large reverse

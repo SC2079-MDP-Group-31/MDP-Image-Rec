@@ -111,262 +111,65 @@ Example:
 ```py
 {
   "commands": [
-    "SF040",
-    "RF090",
-    "SB010",
-    "SCAN_3",
-    "SF010",
+    "FW040",
+    "FR090",
+    "BW010",
+    "SCAN03",
+    "FW010",
     "RB090",
-    "SF050",
-    "SCAN_5",
-    "SB020",
-    "RF090",
-    "SF010",
-    "LF090",
-    "SCAN_4",
-    "SF010",
-    "RF090",
-    "RF090",
-    "SB020",
-    "RB090",
-    "SCAN_6",
-    "RF090",
-    "SF030",
-    "LF090",
-    "SCAN_2",
-    "SB010",
-    "RF090",
-    "SF060",
-    "RB090",
-    "SF010",
-    "SCAN_1",
-    "SB030",
-    "LF090",
-    "SB030",
-    "RB090",
-    "SF010",
-    "SCAN_0",
-    "SB010",
-    "RF090",
-    "SF080",
-    "RB090",
-    "SF010",
-    "SCAN_7"
+    "FW050",
+    "SCAN05",
+    "BW020",
+    "FR090",
+    "FW010",
+    "FL090",
+    "SCAN04",
   ],
   "path": [
     {
       "x": 1,
       "y": 1,
-      "d": "N"
+      "d": 0
     },
     {
       "x": 1,
       "y": 5,
-      "d": "N"
+      "d": 0
     },
     {
       "x": 4,
       "y": 7,
-      "d": "E"
+      "d": 1
     },
     {
       "x": 3,
       "y": 7,
-      "d": "E"
+      "d": 1
     },
     {
       "x": 3,
       "y": 7,
-      "d": "E"
+      "d": 1
     },
     {
       "x": 4,
       "y": 7,
-      "d": "E"
+      "d": 1
     },
     {
       "x": 1,
       "y": 5,
-      "d": "N"
+      "d": 0
     },
     {
       "x": 1,
       "y": 10,
-      "d": "N"
+      "d": 0
     },
-    {
-      "x": 1,
-      "y": 10,
-      "d": "N"
-    },
-    {
-      "x": 1,
-      "y": 8,
-      "d": "N"
-    },
-    {
-      "x": 4,
-      "y": 10,
-      "d": "E"
-    },
-    {
-      "x": 5,
-      "y": 10,
-      "d": "E"
-    },
-    {
-      "x": 7,
-      "y": 13,
-      "d": "N"
-    },
-    {
-      "x": 7,
-      "y": 13,
-      "d": "N"
-    },
-    {
-      "x": 7,
-      "y": 14,
-      "d": "N"
-    },
-    {
-      "x": 10,
-      "y": 16,
-      "d": "E"
-    },
-    {
-      "x": 12,
-      "y": 13,
-      "d": -90
-    },
-    {
-      "x": 12,
-      "y": 15,
-      "d": -90
-    },
-    {
-      "x": 10,
-      "y": 18,
-      "d": "E"
-    },
-    {
-      "x": 10,
-      "y": 18,
-      "d": "E"
-    },
-    {
-      "x": 12,
-      "y": 15,
-      "d": -90
-    },
-    {
-      "x": 12,
-      "y": 12,
-      "d": -90
-    },
-    {
-      "x": 15,
-      "y": 10,
-      "d": "E"
-    },
-    {
-      "x": 15,
-      "y": 10,
-      "d": "E"
-    },
-    {
-      "x": 14,
-      "y": 10,
-      "d": "E"
-    },
-    {
-      "x": 16,
-      "y": 7,
-      "d": -90
-    },
-    {
-      "x": 16,
-      "y": 1,
-      "d": -90
-    },
-    {
-      "x": 14,
-      "y": 4,
-      "d": "E"
-    },
-    {
-      "x": 15,
-      "y": 4,
-      "d": "E"
-    },
-    {
-      "x": 15,
-      "y": 4,
-      "d": "E"
-    },
-    {
-      "x": 12,
-      "y": 4,
-      "d": "E"
-    },
-    {
-      "x": 14,
-      "y": 7,
-      "d": "N"
-    },
-    {
-      "x": 14,
-      "y": 4,
-      "d": "N"
-    },
-    {
-      "x": 16,
-      "y": 1,
-      "d": "W"
-    },
-    {
-      "x": 15,
-      "y": 1,
-      "d": "W"
-    },
-    {
-      "x": 15,
-      "y": 1,
-      "d": "W"
-    },
-    {
-      "x": 16,
-      "y": 1,
-      "d": "W"
-    },
-    {
-      "x": 14,
-      "y": 4,
-      "d": "N"
-    },
-    {
-      "x": 14,
-      "y": 12,
-      "d": "N"
-    },
-    {
-      "x": 16,
-      "y": 9,
-      "d": "W"
-    },
-    {
-      "x": 15,
-      "y": 9,
-      "d": "W"
-    },
-    {
-      "x": 15,
-      "y": 9,
-      "d": "W"
-    }
   ],
-  "total_commands": 41
+  "total_commands": 14
 }
+
 ```
 
 #### Image Recognition Endpoint
@@ -447,6 +250,25 @@ uvicorn app.main:app --host 0.0.0.0 --port 5000
 ```bash
 ngrok http 5000
 ```
+
+---
+
+### Pathing Algorithm Output Breakdown
+**COMMANDS**
+- `FW090` : Forward Movement By 90cm
+- `FR090` : Forward Right Movement By 90cm
+- `FL090` : Forward Left Movement By 90cm
+- `BW090` : Backwards Movement By 90cm
+- `RB090` : Backwards Right Movement By 90cm
+- `LB090` : Backwards Left Movement By 90cm
+- `SCAN02` : Scan Operation For Obstacle 3
+
+**PATH**
+- `x`: Robots Current X Position
+- `y` : Robots Current Y Position
+- `d` : Robots Current Facing Direction *(0 for North, 1 for East, 2 for South, 3 for West)*
+
+---
 
 ### Data Mapping
 | Image ID | Representation |
