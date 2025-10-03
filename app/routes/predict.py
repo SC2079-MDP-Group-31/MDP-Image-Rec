@@ -113,6 +113,15 @@ async def predict_save_image(file: UploadFile = File(...)):
     with open(save_path, "wb") as f:
         f.write(buffer.getbuffer())  # buffer is BytesIO, so use getbuffer()
     print("Predicted image saved to server as ", filename)
+
+    # Remove on actual day
+    if len(predictions['predictions']) == 0:
+        print("No predictions found, adding dummy data for testing")
+        predictions['predictions'].append({
+            "class_id": 0,
+            "image_id": 11,
+            "confidence": 0.99
+        })
     
     return predictions
 

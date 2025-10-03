@@ -33,18 +33,29 @@ def _bytes_to_rgb_numpy(image_bytes: bytes) -> np.ndarray:
     """Decode bytes -> contiguous uint8 RGB HxWx3, with EXIF orientation fixed."""
     img = Image.open(io.BytesIO(image_bytes))
     img = ImageOps.exif_transpose(img).convert("RGB")  # handle orientation + force RGB
-    flipped_img = img.rotate(180) # Flip image 180 degrees for camera orientation
+
+    # Flip image 180 degrees for camera orientation
+    flipped_img = img.rotate(180) 
     arr = np.asarray(flipped_img, dtype=np.uint8)
+
+    # Dont flip image 180 degrees for camera orientation
+    # arr = np.asarray(img, dtype=np.uint8)
+
     return np.ascontiguousarray(arr)
 
 # Function to handle image prediction and return annotated image for download
 def model_predict_download(image_bytes: bytes, returnJSON: bool = False):
+
     # 1) Decode bytes to numpy
     img_rgb = _bytes_to_rgb_numpy(image_bytes)            # (H,W,3) RGB
+    
+    # Convert to grayscale with 3 channels
+    img_rgb_gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
+    img_rgb_gray2 = cv2.cvtColor(img_rgb_gray, cv2.COLOR_GRAY2RGB)
 
     # 2) Inference (Ultralytics accepts numpy arrays directly)
     res = model.predict(
-        source=img_rgb,
+        source=img_rgb_gray2,
         conf=CONF,
         iou=IOU,
         imgsz=IMG_SIZE,

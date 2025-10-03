@@ -10,8 +10,8 @@ class TurnCommand(Command):
     # Time constants for different turn types
     TURN_TIMES = {
         TypeOfTurn.SMALL: 10,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
-        TypeOfTurn.MEDIUM: 20,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
-        TypeOfTurn.LARGE: 30,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
+        TypeOfTurn.MEDIUM: 30,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
+        TypeOfTurn.LARGE: 50,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
     }
 
     # Position deltas for different turn combinations
@@ -45,30 +45,31 @@ class TurnCommand(Command):
 
     MEDIUM_TURN_DELTAS = {
         (True, False, False): {  # Left forward
-            Direction.TOP: (-30, 20, Direction.LEFT),
-            Direction.LEFT: (-20, -30, Direction.BOTTOM),
-            Direction.RIGHT: (20, 30, Direction.TOP),
-            Direction.BOTTOM: (30, -20, Direction.RIGHT),
+            Direction.TOP: (-50, 30, Direction.LEFT),
+            Direction.LEFT: (-30, -50, Direction.BOTTOM),
+            Direction.RIGHT: (30, 50, Direction.TOP),
+            Direction.BOTTOM: (50, -30, Direction.RIGHT),
         },
         (False, True, False): {  # Right forward
-            Direction.TOP: (30, 20, Direction.RIGHT),
-            Direction.LEFT: (-20, 30, Direction.TOP),
-            Direction.RIGHT: (20, -30, Direction.BOTTOM),
-            Direction.BOTTOM: (-30, -20, Direction.LEFT),
+            Direction.TOP: (50, 30, Direction.RIGHT),
+            Direction.LEFT: (-30, 50, Direction.TOP),
+            Direction.RIGHT: (30, -50, Direction.BOTTOM),
+            Direction.BOTTOM: (-50, -30, Direction.LEFT),
         },
         (True, False, True): {  # Left reverse
-            Direction.TOP: (-20, -30, Direction.RIGHT),
-            Direction.LEFT: (30, -20, Direction.TOP),
-            Direction.RIGHT: (-30, 20, Direction.BOTTOM),
-            Direction.BOTTOM: (20, 30, Direction.LEFT),
+            Direction.TOP: (-30, -50, Direction.RIGHT),
+            Direction.LEFT: (50, -30, Direction.TOP),
+            Direction.RIGHT: (-50, 30, Direction.BOTTOM),
+            Direction.BOTTOM: (30, 50, Direction.LEFT),
         },
         (False, True, True): {  # Right reverse
-            Direction.TOP: (20, -30, Direction.LEFT),
-            Direction.LEFT: (30, 20, Direction.BOTTOM),
-            Direction.RIGHT: (-30, -20, Direction.TOP),
-            Direction.BOTTOM: (-20, 30, Direction.RIGHT),
+            Direction.TOP: (30, -50, Direction.LEFT),
+            Direction.LEFT: (50, 30, Direction.BOTTOM),
+            Direction.RIGHT: (-50, -30, Direction.TOP),
+            Direction.BOTTOM: (-30, 50, Direction.RIGHT),
         },
     }
+
 
     # Command messages for different turn combinations
     COMMAND_MESSAGES = {

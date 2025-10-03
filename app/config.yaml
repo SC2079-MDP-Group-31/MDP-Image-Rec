@@ -5,9 +5,9 @@ save_dir: "app/outputs"
 predictions_dir: "app/outputs/predictions"
 stitched_dir: "app/outputs/stitched_preds"
 imgsz: 640
-conf: 0.75
-iou: 0.6
-jpeg_quality: 95 # Controls compression: 1-100 (higher is better quality but larger file)
+conf: 0.20
+iou: 0.20
+jpeg_quality: 100 # Controls compression: 1-100 (higher is better quality but larger file)
 line_width: 2 # Controls width of bounding box lines
 font_size: 10 # Font size for labels
 device: 0               # "0" for GPU 0, or "cpu"
