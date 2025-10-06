@@ -9,6 +9,7 @@ import json
 from PIL import Image, ImageOps
 from pathlib import Path
 from ultralytics import YOLO
+from ultralytics.engine.results import Boxes
 
 # load variables from config file into the environment
 with open("app/config.yaml", "r") as f:   # adjust path if config.yaml is elsewhere
@@ -27,8 +28,6 @@ LINE_WIDTH = int(cfg.get("line_width", 2))
 FONT_SIZE = int(cfg.get("font_size", 5))
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-model = YOLO(MODEL_PATH).to(DEVICE)
-
 def _bytes_to_rgb_numpy(image_bytes: bytes) -> np.ndarray:
     """Decode bytes -> contiguous uint8 RGB HxWx3, with EXIF orientation fixed."""
     img = Image.open(io.BytesIO(image_bytes))
@@ -44,7 +43,11 @@ def _bytes_to_rgb_numpy(image_bytes: bytes) -> np.ndarray:
     return np.ascontiguousarray(arr)
 
 # Function to handle image prediction and return annotated image for download
-def model_predict_download(image_bytes: bytes, returnJSON: bool = False):
+def model_predict_download(image_bytes: bytes, returnJSON: bool = False, model_path: str = MODEL_PATH):
+
+    print('Using model located in', model_path)
+    # Load in model
+    model = YOLO(model_path).to(DEVICE)
 
     # 1) Decode bytes to numpy
     img_rgb = _bytes_to_rgb_numpy(image_bytes)            # (H,W,3) RGB
@@ -63,7 +66,23 @@ def model_predict_download(image_bytes: bytes, returnJSON: bool = False):
         verbose=False,
     )[0]
 
+    # Filter out all detections less the one with the largest bounding box
+    detectionBoxs = res.boxes
+    if len(detectionBoxs) >= 2:
+        print("More than 1 object detected in the image....selecting closer object")
+        # Compute area for each detection
+        areas = detectionBoxs.xywh[:, 2] * detectionBoxs.xywh[:, 3]
+
+        # Find index of largest area
+        largest_idx = int(torch.argmax(areas))
+
+        # Keep only that detection
+        largest_box_data = res.boxes.data[largest_idx].unsqueeze(0)  # tensor shape (1,6)
+        res.boxes = Boxes(largest_box_data, res.boxes.orig_shape)    # reconstruct single-box object
+
+
     # 3) Render annotated image (BGR numpy)
+    res.orig_img = img_rgb.copy() # Restore original image for annotation
     annotated_bgr = res.plot(line_width=LINE_WIDTH, font_size=FONT_SIZE)
 
     # 4) Convert to RGB for saving via PIL (or keep BGR and use cv2.imencode)

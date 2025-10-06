@@ -12,14 +12,12 @@ from path_finding.modified_a_star import ModifiedAStar
 class WeightedAStar(ModifiedAStar):
     """
     Weighted A* pathfinding algorithm that assigns different costs to different types of movements.
-    Prioritizes straight movements over turns, with increasing penalties for larger turns.
+    Prioritizes straight movements over turns.
     """
 
     # Movement weight constants
     WEIGHT_STRAIGHT = 0
-    WEIGHT_SMALL_TURN = 10
     WEIGHT_MEDIUM_TURN = 20
-    WEIGHT_LARGE_TURN = 30
     DEFAULT_WEIGHT = 100
 
     # Distance calculation constant
@@ -43,9 +41,7 @@ class WeightedAStar(ModifiedAStar):
 
         # Movement weights - can be adjusted for different behaviors
         self.weight_straight = self.WEIGHT_STRAIGHT
-        self.weight_small_turn = self.WEIGHT_SMALL_TURN
         self.weight_medium_turn = self.WEIGHT_MEDIUM_TURN
-        self.weight_large_turn = self.WEIGHT_LARGE_TURN
 
     def distance_heuristic(self, curr_pos: RobotPosition) -> int:
         """
@@ -83,13 +79,9 @@ class WeightedAStar(ModifiedAStar):
         if isinstance(command, StraightCommand):
             return self.weight_straight
         elif isinstance(command, TurnCommand):
-            turn_type = command.get_type_of_turn()
-            if turn_type == TypeOfTurn.SMALL:
-                return self.weight_small_turn
-            elif turn_type == TypeOfTurn.MEDIUM:
+            # Only MEDIUM turns supported now
+            if command.get_type_of_turn() == TypeOfTurn.MEDIUM:
                 return self.weight_medium_turn
-            elif turn_type == TypeOfTurn.LARGE:
-                return self.weight_large_turn
 
         return self.DEFAULT_WEIGHT
 
@@ -173,7 +165,7 @@ class WeightedAStar(ModifiedAStar):
             Tuple of (final_position, command_list) or (None, []) if no path found
         """
         return self.start_weighted_astar(flag)
-    
+
     def get_path_with_coordinates(self, flag) -> Tuple[Optional[RobotPosition], List[Tuple[Command, RobotPosition]]]:
         """
         Execute pathfinding and return commands with estimated coordinates after each movement.
@@ -186,18 +178,18 @@ class WeightedAStar(ModifiedAStar):
             or (None, []) if no path found
         """
         final_position, commands = self.start_weighted_astar(flag)
-        
+
         if final_position is None or not commands:
             return None, []
-        
+
         # Track coordinates after each command
         commands_with_coords = []
         current_pos = self.start.copy()
-        
+
         for command in commands:
             # Apply command to get new position
             command.apply_on_pos(current_pos)
             # Store command with the position after execution
             commands_with_coords.append((command, current_pos.copy()))
-        
+
         return final_position, commands_with_coords

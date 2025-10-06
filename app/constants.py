@@ -41,7 +41,7 @@ ROBOT_S_FACTOR = ROBOT_LENGTH / ROBOT_TURN_RADIUS
 # Time provided for scanning an obstacle image in seconds
 ROBOT_SCAN_TIME = 0.25
 
-EXECUTION_TIMEOUT_SECONDS = 20
+EXECUTION_TIMEOUT_SECONDS = 300
 
 # =============================================================================
 # GRID CONFIGURATION
@@ -99,15 +99,22 @@ BUTTON_WIDTH = 30
 # =============================================================================
 
 # Task 1 Simulator Config - obstacle positions [x, y, direction]
+# SIMULATOR_OBSTACLES = [
+#     [110, 0, Direction.RIGHT],    # or move this to the left gives enough clearance
+#     [190, 40, Direction.LEFT],    # removing this creates enough clearance for the robot to pass
+#     [190, 100, Direction.LEFT],
+#     [70, 70, Direction.LEFT],
+#     [70, 170, Direction.BOTTOM],
+#     [0, 140, Direction.BOTTOM],
+#     [140, 180, Direction.LEFT],
+#     [110, 90, Direction.RIGHT]
+# ]
+
 SIMULATOR_OBSTACLES = [
-    [110, 0, Direction.RIGHT],    # or move this to the left gives enough clearance
-    [190, 40, Direction.LEFT],    # removing this creates enough clearance for the robot to pass
-    [190, 100, Direction.LEFT],
-    [70, 70, Direction.LEFT],
-    [70, 170, Direction.BOTTOM],
-    [0, 140, Direction.BOTTOM],
-    [140, 180, Direction.LEFT],
-    [110, 90, Direction.RIGHT]
+    [20, 90, Direction.RIGHT],    # or move this to the left gives enough clearance
+    [70, 140, Direction.BOTTOM],    # removing this creates enough clearance for the robot to pass
+    [120, 130, Direction.BOTTOM],
+    [150, 70, Direction.LEFT]
 ]
 
 # Task 2 Simulator Config
@@ -170,16 +177,16 @@ TURN_SMALL_RIGHT_BOTTOM_FORWARD = (-10, -40)
 TURN_SMALL_RIGHT_LEFT_FORWARD = (-40, 10)
 
 # Medium left turns (forward)
-TURN_MED_LEFT_TOP_FORWARD = (-30, 20)
-TURN_MED_LEFT_RIGHT_FORWARD = (20, 30)
-TURN_MED_LEFT_BOTTOM_FORWARD = (30, -20)
-TURN_MED_LEFT_LEFT_FORWARD = (-20, -30)
+TURN_MED_LEFT_TOP_FORWARD = (-20, 30)
+TURN_MED_LEFT_RIGHT_FORWARD = (30, 20)
+TURN_MED_LEFT_BOTTOM_FORWARD = (20, -30)
+TURN_MED_LEFT_LEFT_FORWARD = (-30, -20)
 
 # Medium right turns (forward)
-TURN_MED_RIGHT_TOP_FORWARD = (30, 20)
-TURN_MED_RIGHT_RIGHT_FORWARD = (20, -30)
-TURN_MED_RIGHT_BOTTOM_FORWARD = (-30, -20)
-TURN_MED_RIGHT_LEFT_FORWARD = (-20, 30)
+TURN_MED_RIGHT_TOP_FORWARD = (20, 30)
+TURN_MED_RIGHT_RIGHT_FORWARD = (30, -20)
+TURN_MED_RIGHT_BOTTOM_FORWARD = (-20, -30)
+TURN_MED_RIGHT_LEFT_FORWARD = (-30, 20)
 
 # Small left turns (reverse)
 TURN_SMALL_LEFT_TOP_REVERSE = (-10, -40)
@@ -194,13 +201,13 @@ TURN_SMALL_RIGHT_BOTTOM_REVERSE = (-10, 40)
 TURN_SMALL_RIGHT_LEFT_REVERSE = (40, 10)
 
 # Medium left turns (reverse)
-TURN_MED_LEFT_TOP_REVERSE = (-20, -30)
-TURN_MED_LEFT_RIGHT_REVERSE = (-30, 20)
-TURN_MED_LEFT_BOTTOM_REVERSE = (20, 30)
-TURN_MED_LEFT_LEFT_REVERSE = (30, -20)
+TURN_MED_LEFT_TOP_REVERSE = (-30, -20)
+TURN_MED_LEFT_RIGHT_REVERSE = (-20, 30)
+TURN_MED_LEFT_BOTTOM_REVERSE = (30, 20)
+TURN_MED_LEFT_LEFT_REVERSE = (20, -30)
 
 # Medium right turns (reverse)
-TURN_MED_RIGHT_TOP_REVERSE = (20, -30)
-TURN_MED_RIGHT_RIGHT_REVERSE = (-30, -20)
-TURN_MED_RIGHT_BOTTOM_REVERSE = (-20, 30)
-TURN_MED_RIGHT_LEFT_REVERSE = (30, 20)
+TURN_MED_RIGHT_TOP_REVERSE = (30, -20)
+TURN_MED_RIGHT_RIGHT_REVERSE = (-20, -30)
+TURN_MED_RIGHT_BOTTOM_REVERSE = (-30, 20)
+TURN_MED_RIGHT_LEFT_REVERSE = (20, 30)

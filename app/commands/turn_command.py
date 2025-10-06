@@ -7,85 +7,47 @@ from misc.type_of_turn import TypeOfTurn
 
 
 class TurnCommand(Command):
-    # Time constants for different turn types
+    # Time constants for turn type
     TURN_TIMES = {
-        TypeOfTurn.SMALL: 10,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
         TypeOfTurn.MEDIUM: 30,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
-        TypeOfTurn.LARGE: 50,  # SOME VALUE TO BE EMPIRICALLY DETERMINED
     }
 
     # Position deltas for different turn combinations
-    SMALL_TURN_DELTAS = {
+    MEDIUM_TURN_DELTAS = {
         # (left, right, reverse): {direction: (dx, dy, new_direction)}
         (True, False, False): {  # Left forward
-            Direction.TOP: (-10, 40, None),
-            Direction.LEFT: (-40, -10, None),
-            Direction.RIGHT: (40, 10, None),
-            Direction.BOTTOM: (10, -40, None),
+            Direction.TOP: (-20, 30, Direction.LEFT),
+            Direction.LEFT: (-30, -20, Direction.BOTTOM),
+            Direction.RIGHT: (30, 20, Direction.TOP),
+            Direction.BOTTOM: (20, -30, Direction.RIGHT),
         },
         (False, True, False): {  # Right forward
-            Direction.TOP: (10, 40, None),
-            Direction.LEFT: (-40, 10, None),
-            Direction.RIGHT: (40, -10, None),
-            Direction.BOTTOM: (-10, -40, None),
+            Direction.TOP: (20, 30, Direction.RIGHT),
+            Direction.LEFT: (-30, 20, Direction.TOP),
+            Direction.RIGHT: (30, -20, Direction.BOTTOM),
+            Direction.BOTTOM: (-20, -30, Direction.LEFT),
         },
         (True, False, True): {  # Left reverse
-            Direction.TOP: (-10, -40, None),
-            Direction.LEFT: (40, -10, None),
-            Direction.RIGHT: (-40, 10, None),
-            Direction.BOTTOM: (10, 40, None),
+            Direction.TOP: (-30, -20, Direction.RIGHT),
+            Direction.LEFT: (20, -30, Direction.TOP),
+            Direction.RIGHT: (-20, 30, Direction.BOTTOM),
+            Direction.BOTTOM: (30, 20, Direction.LEFT),
         },
         (False, True, True): {  # Right reverse
-            Direction.TOP: (10, -40, None),
-            Direction.LEFT: (40, 10, None),
-            Direction.RIGHT: (-40, -10, None),
-            Direction.BOTTOM: (-10, 40, None),
+            Direction.TOP: (30, -20, Direction.LEFT),
+            Direction.LEFT: (20, 30, Direction.BOTTOM),
+            Direction.RIGHT: (-20, -30, Direction.TOP),
+            Direction.BOTTOM: (-30, 20, Direction.RIGHT),
         },
     }
-
-    MEDIUM_TURN_DELTAS = {
-        (True, False, False): {  # Left forward
-            Direction.TOP: (-50, 30, Direction.LEFT),
-            Direction.LEFT: (-30, -50, Direction.BOTTOM),
-            Direction.RIGHT: (30, 50, Direction.TOP),
-            Direction.BOTTOM: (50, -30, Direction.RIGHT),
-        },
-        (False, True, False): {  # Right forward
-            Direction.TOP: (50, 30, Direction.RIGHT),
-            Direction.LEFT: (-30, 50, Direction.TOP),
-            Direction.RIGHT: (30, -50, Direction.BOTTOM),
-            Direction.BOTTOM: (-50, -30, Direction.LEFT),
-        },
-        (True, False, True): {  # Left reverse
-            Direction.TOP: (-30, -50, Direction.RIGHT),
-            Direction.LEFT: (50, -30, Direction.TOP),
-            Direction.RIGHT: (-50, 30, Direction.BOTTOM),
-            Direction.BOTTOM: (30, 50, Direction.LEFT),
-        },
-        (False, True, True): {  # Right reverse
-            Direction.TOP: (30, -50, Direction.LEFT),
-            Direction.LEFT: (50, 30, Direction.BOTTOM),
-            Direction.RIGHT: (-50, -30, Direction.TOP),
-            Direction.BOTTOM: (-30, 50, Direction.RIGHT),
-        },
-    }
-
 
     # Command messages for different turn combinations
     COMMAND_MESSAGES = {
         # (left, right, reverse, turn_type): message
-        (True, False, False, TypeOfTurn.SMALL): "KF001",  # turn left small forward
         (True, False, False, TypeOfTurn.MEDIUM): "FL090",  # turn left medium forward
-        (True, False, False, TypeOfTurn.LARGE): "FL180",  # turn left large forward
-        (True, False, True, TypeOfTurn.SMALL): "KB001",  # turn left small reverse
         (True, False, True, TypeOfTurn.MEDIUM): "LB090",  # turn left medium reverse
-        (True, False, True, TypeOfTurn.LARGE): "LB180",  # turn left large reverse
-        (False, True, False, TypeOfTurn.SMALL): "JF001",  # turn right small forward
         (False, True, False, TypeOfTurn.MEDIUM): "FR090",  # turn right medium forward
-        (False, True, False, TypeOfTurn.LARGE): "FR180",  # turn right large forward
-        (False, True, True, TypeOfTurn.SMALL): "JB001",  # turn right small reverse
         (False, True, True, TypeOfTurn.MEDIUM): "RB090",  # turn right medium reverse
-        (False, True, True, TypeOfTurn.LARGE): "RB180",  # turn right large reverse
     }
 
     def __init__(self, type_of_turn: TypeOfTurn, left: bool, right: bool, reverse: bool):
@@ -93,7 +55,7 @@ class TurnCommand(Command):
         Initialize a turn command.
 
         Args:
-            type_of_turn: The magnitude of the turn (SMALL, MEDIUM, LARGE)
+            type_of_turn: The magnitude of the turn (only MEDIUM supported)
             left: Whether to turn the front wheels left
             right: Whether to turn the front wheels right
             reverse: Whether to execute the turn in reverse
@@ -134,15 +96,7 @@ class TurnCommand(Command):
             Tuple of (dx, dy, new_direction). new_direction is None if unchanged.
         """
         turn_key = (self.left, self.right, self.reverse)
-
-        if self.type_of_turn == TypeOfTurn.SMALL:
-            deltas = self.SMALL_TURN_DELTAS
-        elif self.type_of_turn == TypeOfTurn.MEDIUM:
-            deltas = self.MEDIUM_TURN_DELTAS
-        else:  # TypeOfTurn.LARGE
-            # Large turns not implemented in original code
-            return (0, 0, None)
-
+        deltas = self.MEDIUM_TURN_DELTAS
         return deltas.get(turn_key, {}).get(direction, (0, 0, None))
 
     def apply_on_pos(self, curr_pos: Position) -> 'TurnCommand':
@@ -176,25 +130,16 @@ class TurnCommand(Command):
 
         Returns:
             Command message string
-        
-        
+
         Possible command messages:
         # Left forward turns
-        #   SMALL:  "KF001"  (turn left small forward)
-        #   MEDIUM: "LF090"  (turn left medium forward)
-        #   LARGE:  "LF180"  (turn left large forward)
+        #   MEDIUM: "FL090"  (turn left medium forward)
         # Left reverse turns
-        #   SMALL:  "KB001"  (turn left small reverse)
         #   MEDIUM: "LB090"  (turn left medium reverse)
-        #   LARGE:  "LB180"  (turn left large reverse)
         # Right forward turns
-        #   SMALL:  "JF001"  (turn right small forward)
-        #   MEDIUM: "RF090"  (turn right medium forward)
-        #   LARGE:  "RF180"  (turn right large forward)
+        #   MEDIUM: "FR090"  (turn right medium forward)
         # Right reverse turns
-        #   SMALL:  "JB001"  (turn right small reverse)
         #   MEDIUM: "RB090"  (turn right medium reverse)
-        #   LARGE:  "RB180"  (turn right large reverse)
         # If configuration is not recognized, returns "UNKNOWN_COMMAND".
         """
         command_key = (self.left, self.right, self.reverse, self.type_of_turn)

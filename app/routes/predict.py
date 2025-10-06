@@ -107,21 +107,17 @@ async def predict_save_image(file: UploadFile = File(...)):
     print("Request Received To Predict Image.")
     contents = await file.read()
     buffer, filename, predictions = model_predict_download(contents)
+    # If no predictions detected, use a different model
+    if not predictions['predictions']:
+        print("No predictions detected, using alternative model...")
+        buffer, filename, predictions = model_predict_download(contents, model_path="models/task2/v12_task1.pt")
+    
     print("Image prediction completed")
     # ---- Save file to server directory ----
     save_path = os.path.join(PREDICTIONS_DIR, filename)
     with open(save_path, "wb") as f:
         f.write(buffer.getbuffer())  # buffer is BytesIO, so use getbuffer()
     print("Predicted image saved to server as ", filename)
-
-    # Remove on actual day
-    if len(predictions['predictions']) == 0:
-        print("No predictions found, adding dummy data for testing")
-        predictions['predictions'].append({
-            "class_id": 0,
-            "image_id": 11,
-            "confidence": 0.99
-        })
     
     return predictions
 
@@ -131,12 +127,6 @@ async def stitch_images():
     stitched_img = stitch_img()
     stitched_img.show()  # This will open the stitched image using the default image viewer
     return {"message": "Stitched image displayed."}
-
-# This endpoint obtains the obstacle data and returns the robot pathing
-# @router.post("/path")
-# async def get_prediction_path(raw_data: str):
-#     commands = run_minimal(raw_data)
-#     return {"predictions_path": commands}
 
 # This endpoint obtains the obstacle data and returns the robot pathing with coordinates
 @router.post("/path")
@@ -172,9 +162,10 @@ async def get_prediction_path_with_coordinates(request: Request):
         else:
             # Handle case where position tracking is not available
             formatted_response.append({
-                "command": cmd_str,
+                "commands": cmd_str,
                 "estimated_position": None
             })
+
     
     commands = []
     path = [{
@@ -185,6 +176,10 @@ async def get_prediction_path_with_coordinates(request: Request):
     for item in formatted_response:
         commands.append(item['commands'])   
         path.append(item['estimated_position'])
+
+    # Append FIN command, final path position at the end
+    commands.append("FIN")
+    path.append(formatted_response[-1]['estimated_position'])
 
     print(f"Formatted response: {formatted_response}")
 

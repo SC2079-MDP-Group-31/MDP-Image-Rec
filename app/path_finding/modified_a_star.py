@@ -10,6 +10,7 @@ from misc.direction import Direction
 from misc.positioning import RobotPosition
 from misc.type_of_turn import TypeOfTurn
 
+
 class ModifiedAStar:
     def __init__(self, grid, brain, start: RobotPosition, end: RobotPosition, yolo):
         # We use a copy of the grid rather than use a reference to the exact grid.
@@ -41,30 +42,19 @@ class ModifiedAStar:
             if after:
                 neighbours.append((after, p, straight_dist, command))
 
-        # Check turns
-        # SOME HEURISTIC VALUE (need to account for turns travelling more also!)
-        # will be adjusted on type of turn. 90 degree turn is lower cost than small turn
-        turn_penalty = 100
-        turn_commands = [  # type of turn, Left, Right, Reverse
-            TurnCommand(TypeOfTurn.SMALL, True, False, False),  # L SMALL turn, forward
+        # Check turns - ONLY MEDIUM turns now
+        turn_penalty = 50 if not self.yolo else 0
+        turn_commands = [
             TurnCommand(TypeOfTurn.MEDIUM, True, False, False),  # L MEDIUM turn, forward
-            TurnCommand(TypeOfTurn.SMALL, True, False, True),  # L SMALL turn, reverse
             TurnCommand(TypeOfTurn.MEDIUM, True, False, True),  # L MEDIUM turn, reverse
-            TurnCommand(TypeOfTurn.SMALL, False, True, False),  # R SMALL turn, forward
             TurnCommand(TypeOfTurn.MEDIUM, False, True, False),  # R MEDIUM turn, forward
-            TurnCommand(TypeOfTurn.SMALL, False, True, True),  # R SMALL turn, reverse
             TurnCommand(TypeOfTurn.MEDIUM, False, True, True),  # R MEDIUM turn, reverse
         ]
 
         for c in turn_commands:
             # Check if doing this command does not bring us to any invalid position.
             after, p = self.check_valid_command(c, pos)
-
             if after:
-                if c.get_type_of_turn == TypeOfTurn.SMALL:
-                    turn_penalty = 100 if not self.yolo else 20
-                elif c.get_type_of_turn == TypeOfTurn.MEDIUM:
-                    turn_penalty = 50 if not self.yolo else 0
                 neighbours.append((after, p, turn_penalty, c))
 
         return neighbours
@@ -203,7 +193,7 @@ class ModifiedAStar:
         """
         dx = abs(curr_pos.x - self.end.x)
         dy = abs(curr_pos.y - self.end.y)
-        return math.sqrt(dx**2 + dy**2)
+        return math.sqrt(dx ** 2 + dy ** 2)
 
     def direction_heuristic(self, curr_pos: RobotPosition):
         """
@@ -261,9 +251,9 @@ class ModifiedAStar:
                 if new_cost < cost.get(new_node, 100000):
                     offset += 1
                     priority = (
-                        new_cost
-                        + self.distance_heuristic(new_pos)
-                        + self.direction_heuristic(new_pos)
+                            new_cost
+                            + self.distance_heuristic(new_pos)
+                            + self.direction_heuristic(new_pos)
                     )
 
                     heapq.heappush(frontier, (priority, offset, (new_node, new_pos)))
@@ -293,7 +283,7 @@ class ModifiedAStar:
             return None
         else:
             return commands
-    
+
     def get_path_with_coordinates(self, flag):
         """
         Execute pathfinding and return commands with estimated coordinates after each movement.
@@ -306,18 +296,18 @@ class ModifiedAStar:
             or (None, []) if no path found
         """
         final_position, commands = self.start_astar(flag)
-        
+
         if final_position is None or not commands:
             return None, []
-        
+
         # Track coordinates after each command
         commands_with_coords = []
         current_pos = self.start.copy()
-        
+
         for command in commands:
             # Apply command to get new position
             command.apply_on_pos(current_pos)
             # Store command with the position after execution
             commands_with_coords.append((command, current_pos.copy()))
-        
+
         return final_position, commands_with_coords
