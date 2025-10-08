@@ -106,11 +106,11 @@ async def test():
 async def predict_save_image(file: UploadFile = File(...)):
     print("Request Received To Predict Image.")
     contents = await file.read()
-    buffer, filename, predictions = model_predict_download(contents)
+    buffer, filename, predictions = model_predict_download(contents, model_path="models/task1/task1.pt")
     # If no predictions detected, use a different model
     if not predictions['predictions']:
         print("No predictions detected, using alternative model...")
-        buffer, filename, predictions = model_predict_download(contents, model_path="models/task2/v12_task1.pt")
+        buffer, filename, predictions = model_predict_download(contents, model_path="models/task1/bestv2.pt")
     
     print("Image prediction completed")
     # ---- Save file to server directory ----

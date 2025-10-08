@@ -26,6 +26,7 @@ IOU = float(cfg.get("iou", 0.5))
 JPEG_QUALITY = int(cfg.get("jpeg_quality", 95))
 LINE_WIDTH = int(cfg.get("line_width", 2))
 FONT_SIZE = int(cfg.get("font_size", 5))
+MIN_AREA = int(cfg.get("min_area", 3200))  # minimum area (in pixels) for valid detection box
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 def _bytes_to_rgb_numpy(image_bytes: bytes) -> np.ndarray:
@@ -66,13 +67,27 @@ def model_predict_download(image_bytes: bytes, returnJSON: bool = False, model_p
         verbose=False,
     )[0]
 
-    # Filter out all detections less the one with the largest bounding box
     detectionBoxs = res.boxes
+    
+    # Filter out detections with less than MIN_AREA
+    if len(detectionBoxs) > 0:
+        print(f"Filtering out detection boxes with area less than {MIN_AREA} pixels...")
+        areas = detectionBoxs.xywh[:, 2] * detectionBoxs.xywh[:, 3]
+
+        # Boolean mask for detections above threshold
+        mask = areas >= MIN_AREA
+
+        # keep only detectionBoxes with area >= MIN_AREA
+        detectionBoxs = detectionBoxs[mask]
+
+        # Reassign filtered boxes back to result
+        res.boxes = detectionBoxs
+    
+    # Filter out all detections less the one with the largest bounding box
     if len(detectionBoxs) >= 2:
         print("More than 1 object detected in the image....selecting closer object")
         # Compute area for each detection
         areas = detectionBoxs.xywh[:, 2] * detectionBoxs.xywh[:, 3]
-
         # Find index of largest area
         largest_idx = int(torch.argmax(areas))
 

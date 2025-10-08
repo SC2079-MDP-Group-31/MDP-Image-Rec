@@ -11,6 +11,7 @@ jpeg_quality: 100 # Controls compression: 1-100 (higher is better quality but la
 line_width: 2 # Controls width of bounding box lines
 font_size: 10 # Font size for labels
 device: 0               # "0" for GPU 0, or "cpu"
+min_area: 3200        # Minimum area (in pixels) for valid detection box
 save_txt: true             # YOLO txt outputs
 save_conf: true
 #Holds class names
