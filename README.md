@@ -80,6 +80,8 @@ mkdir -p models inputs outputs
 **Install Model Weights & Yaml File**
 - Obtain Model Weights From The Provided GDrive Link : https://drive.google.com/drive/folders/1gYvWR5__JVK6osUoonCY5rmd46knZXbt?usp=drive_link
 - Place Model Weight Folders Under `models/` directory
+- Model `bestv2.pt` & `task1.pt` under `task1/` directory
+- Model `v12_task1.pt` under `task2/` directory
 
 **Run Image Recognition & Pathing Server**
 ```bash

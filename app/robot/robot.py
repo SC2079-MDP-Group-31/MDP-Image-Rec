@@ -31,8 +31,10 @@ class Robot:
         """
         # Robot starts facing upward with internal angle tracking
         self.pos = RobotPosition(
-            constants.ROBOT_SAFETY_DISTANCE,
-            constants.ROBOT_SAFETY_DISTANCE,
+            20,
+            # constants.ROBOT_SAFETY_DISTANCE,
+            20,
+            # constants.ROBOT_SAFETY_DISTANCE,
             Direction.TOP,
             90,
         )

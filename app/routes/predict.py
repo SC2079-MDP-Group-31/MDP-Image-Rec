@@ -19,6 +19,8 @@ PREDICTIONS_DIR = cfg.get("predictions_dir", "outputs/predictions")
 # ----------------------- TEST APIS --------------------------------------------------
 @router.post("/path-test")
 async def get_prediction_path_with_coordinates_test(raw_data: str):
+
+    print(f"Raw data received at /path endpoint: {raw_data}")
     from services.pathing_algo import run_minimal_with_coordinates
     commands_with_coords = run_minimal_with_coordinates(raw_data)
     
@@ -42,9 +44,10 @@ async def get_prediction_path_with_coordinates_test(raw_data: str):
         else:
             # Handle case where position tracking is not available
             formatted_response.append({
-                "command": cmd_str,
+                "commands": cmd_str,
                 "estimated_position": None
             })
+
     
     commands = []
     path = [{
@@ -55,6 +58,10 @@ async def get_prediction_path_with_coordinates_test(raw_data: str):
     for item in formatted_response:
         commands.append(item['commands'])   
         path.append(item['estimated_position'])
+
+    # Append FIN command, final path position at the end
+    commands.append("FIN")
+    path.append(formatted_response[-1]['estimated_position'])
 
     print(f"Formatted response: {formatted_response}")
 

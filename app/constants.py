@@ -48,7 +48,8 @@ EXECUTION_TIMEOUT_SECONDS = 300
 # =============================================================================
 
 # Main grid settings
-GRID_LENGTH = 200
+# GRID_LENGTH = 220
+GRID_LENGTH = 220
 GRID_CELL_LENGTH = 10
 GRID_START_BOX_LENGTH = 30
 NO_OF_GRID_CELLS_PER_SIDE = GRID_LENGTH // GRID_CELL_LENGTH
