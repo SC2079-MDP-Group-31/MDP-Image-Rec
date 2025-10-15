@@ -75,6 +75,11 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 **Add Required Directories**
 ```bash
 mkdir -p models inputs outputs
+chdir app
+mkdir -p outputs
+chdir outputs
+mkdir -p predictions stitched_preds
+chdir ../..
 ```
 
 **Install Model Weights & Yaml File**
